@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant/detailMenu.dart';
 import 'package:restaurant/restaurant.dart';
+import 'detailMenu.dart';
 
 void main() {
   runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-  ));
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.orange,
+      ),
+      routes: {
+        _HomeState.routeName: (context) => Home(),
+        DetailMenu.routeName: (context) => DetailMenu(
+              resto: ModalRoute.of(context)?.settings.arguments as Restaurant,
+            ),
+      }));
 }
 
 class Home extends StatefulWidget {
@@ -14,18 +24,21 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  static const routeName = '/home_page';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 80,
-          title: Text('Restaurants'),
-        ),
-        body: FutureBuilder<String>(
-          future: DefaultAssetBundle.of(context)
-              .loadString('assets/local_restaurant.json'),
-          builder: (context, snapshot) {
-            final List<Restaurant> restaurant = parseRestaurants(snapshot.data);
+      appBar: AppBar(
+        toolbarHeight: 80,
+        title: Text('Restaurants'),
+      ),
+      body: FutureBuilder<String>(
+        future: DefaultAssetBundle.of(context)
+            .loadString('assets/local_restaurant.json'),
+        builder: (context, snapshot) {
+          final List<Restaurant> restaurant = parseRestaurants(snapshot.data);
+          if (snapshot.hasData) {
+            print(snapshot.data);
             return ListView.builder(
               itemCount: restaurant.length,
               itemBuilder: (context, index) {
@@ -35,8 +48,14 @@ class _HomeState extends State<Home> {
                 ]));
               },
             );
-          },
-        ));
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
+    );
   }
 }
 
@@ -54,6 +73,14 @@ Widget _restaurantItem(BuildContext context, Restaurant resto) {
       children: [
         Row(
           children: [
+            Text(
+              resto.name,
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        Row(
+          children: [
             Text(resto.city),
           ],
         ),
@@ -64,5 +91,8 @@ Widget _restaurantItem(BuildContext context, Restaurant resto) {
         ),
       ],
     ),
+    onTap: () {
+      Navigator.pushNamed(context, DetailMenu.routeName, arguments: resto);
+    },
   );
 }
