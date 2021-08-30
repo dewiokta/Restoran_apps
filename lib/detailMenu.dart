@@ -13,99 +13,68 @@ class DetailMenu extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Resto (Rest to Eat)',
+          'About Restaurant',
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Hero(tag: resto.pictureId, child: Image.network(resto.pictureId)),
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: Column(
+        child: Container(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Image.network(resto.pictureId),
+              Padding(padding: EdgeInsets.all(20)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    children: [
-                      Center(
-                        child: Text(resto.name,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            )),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                resto.city,
-                                style: Theme.of(context).textTheme.caption,
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                resto.rating.toString(),
-                                style: Theme.of(context).textTheme.caption,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Divider(color: Colors.green),
+                  Text(resto.name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                      )),
                   Text(
-                    resto.description,
-                    textAlign: TextAlign.justify,
+                    resto.rating.toString(),
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                ],
+              ),
+              Text(
+                resto.city,
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
+              Padding(padding: EdgeInsets.all(8)),
+              Text('Description: '),
+              Padding(padding: EdgeInsets.all(3)),
+              Text(resto.description),
+              Padding(padding: EdgeInsets.all(8)),
+              Text('Menu : '),
+              Padding(padding: EdgeInsets.all(3)),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: resto.menus.foods.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Text('- ' + resto.menus.foods[index].name);
+                        }),
                   ),
-                  Divider(color: Colors.green),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'Food',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          'Drink',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Expanded(
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: resto.menus.foods.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Text('- ' + resto.menus.foods[index].name);
-                            }),
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: resto.menus.drinks.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Text(
-                                  '- ' + resto.menus.drinks[index].name);
-                            }),
-                      ),
-                    ],
+                  Expanded(
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: resto.menus.drinks.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Text('- ' + resto.menus.drinks[index].name);
+                        }),
                   ),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -6,9 +6,8 @@ import 'detailMenu.dart';
 void main() {
   runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
-      ),
+      theme: ThemeData(primarySwatch: Colors.orange),
+      home: Home(),
       routes: {
         _HomeState.routeName: (context) => Home(),
         DetailMenu.routeName: (context) => DetailMenu(
@@ -30,7 +29,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 80,
-        title: Text('Restaurants'),
+        title: Text('D Restaurants'),
       ),
       body: FutureBuilder<String>(
         future: DefaultAssetBundle.of(context)
