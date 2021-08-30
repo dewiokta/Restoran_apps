@@ -1,65 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant/restaurant.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+  ));
 }
 
-class MyApp extends StatelessWidget {
+class Home extends StatefulWidget {
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
+  _HomeState createState() => _HomeState();
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
+        appBar: AppBar(
+          toolbarHeight: 80,
+          title: Text('Restaurants'),
+        ),
+        body: FutureBuilder<String>(
+          future: DefaultAssetBundle.of(context)
+              .loadString('assets/local_restaurant.json'),
+          builder: (context, snapshot) {
+            final List<Restaurant> restaurant = parseRestaurants(snapshot.data);
+            return ListView.builder(
+              itemCount: restaurant.length,
+              itemBuilder: (context, index) {
+                return Container(
+                    child: Column(children: [
+                  _restaurantItem(context, restaurant[index])
+                ]));
+              },
+            );
+          },
+        ));
+  }
+}
+
+Widget _restaurantItem(BuildContext context, Restaurant resto) {
+  return ListTile(
+    contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+    leading: Hero(
+      tag: resto.pictureId,
+      child: Image.network(
+        resto.pictureId,
+        width: 100,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+    ),
+    subtitle: Column(
+      children: [
+        Row(
+          children: [
+            Text(resto.city),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
+        Row(
+          children: [
+            Text(resto.rating.toString()),
+          ],
+        ),
+      ],
+    ),
+  );
 }
